@@ -51,7 +51,7 @@ export const NavItem = styled.div `
 export const SearchWrapper = styled.div `
   position: relative;
   float: left;
-  .iconfont {
+  .zoom {
     position: absolute;
     top: 13px;
     right: 4px;
@@ -62,6 +62,9 @@ export const SearchWrapper = styled.div `
     text-align: center;
     font-size: 14px;
     &.iconfont {
+      background: rgba(0,0,0, .1);
+    }
+    &.bg {
       background: #999;
     }
   }
@@ -98,6 +101,14 @@ export const SearchInfoSwitch = styled.a `
   border-width: 0;
   padding: 0;
   display: block;
+  .spin {
+    display: block;
+    float: left;
+    font-size: 12px;
+    margin-right: 2px;
+    transition: all .2s ease-in;
+    transform-origin: center center;
+  }
 `;
 
 export const SerachInfoItem = styled.a `

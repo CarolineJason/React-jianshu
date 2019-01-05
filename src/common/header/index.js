@@ -53,7 +53,8 @@ class Header extends Component {
             >
             <SearchInfoTitle>
               热门搜索
-              <SearchInfoSwitch onClick={ () => handleChangeList (page, totalPage)}>
+              <SearchInfoSwitch onClick={ () => handleChangeList (page, totalPage,this.ref)}>
+                <i ref={(ref) => this.ref = ref} className="iconfont spin">&#xe851;</i>
                 换一批
               </SearchInfoSwitch>
             </SearchInfoTitle>
@@ -87,12 +88,12 @@ class Header extends Component {
             >
               <NavSearch
                 className={focused ? 'focused' : ''}
-                onFocus={handleInputFocus}
+                onFocus={() => handleInputFocus(list)}
                 onBlur={handleInputBlur}>
               </NavSearch>
             </CSSTransition>
-            <i className={focused ? 'focused iconfont' : 'iconfont'}>
-              &#xe642;
+            <i className={focused ? 'focused iconfont zoom bg' : 'iconfont zoom'}>
+            &#xe62d;
             </i>
             {
               getSearchArea(focused)
@@ -101,7 +102,7 @@ class Header extends Component {
         </Nav>
         <Additon>
           <Button className="writting">
-            <i className="iconfont">&#xe60d;</i>
+            <i className="iconfont">&#xe642;</i>
             写文章
           </Button>
           <Button className="reg">注册</Button>
@@ -126,8 +127,11 @@ const mapStateToProps = ( state ) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    handleInputFocus() {
-      dispatch(actionCreators.getSearchData())
+    handleInputFocus(list) {
+      // if(list.size === 0) { // 防止不必要的加载数据，只需加载一次。
+      //   dispatch(actionCreators.getSearchData())
+      // }
+      (list.size === 0) && dispatch(actionCreators.getSearchData())
       dispatch(actionCreators.searchFocus());
     },
     handleInputBlur() {
@@ -139,8 +143,20 @@ const mapDispatchToProps = (dispatch) => {
     handleMouseLeave() {
       dispatch(actionCreators.mouseLeave());
     },
-    handleChangeList(page, totalPage) {
+    handleChangeList(page, totalPage, spin) {
       // console.log(page, totalPage);
+      // console.log(spin);
+      let originAngle = spin.style.transform.replace(/[^0-9]/ig, '');
+      // console.log(originAngle);
+      if(originAngle) {
+        originAngle = parseInt(originAngle, 10);
+      }
+      else {
+        originAngle = 0;
+      }
+      // 动态去改变 旋转的角度
+      spin.style.transform = 'rotate('+ (originAngle + 360) +'deg)';
+
       if (page < totalPage) {
         dispatch(actionCreators.changePage(page + 1));
         return ;
