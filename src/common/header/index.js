@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import { CSSTransition } from 'react-transition-group';
 import { connect } from 'react-redux';
 import  { actionCreators } from './store';
+import { Link } from 'react-router-dom';
+
+// 在 header的目录中引入 login 组件中的 actionCreators 去处理退出逻辑
+import { actionCreators as LoginActionCreators } from '../../pages/login/store';
+
 
 import {
   HeaderWrapper,
@@ -31,7 +36,9 @@ class Header extends Component {
       handleInputBlur,
       handleMouseEnter,
       handleMouseLeave,
-      handleChangeList 
+      handleChangeList,
+      loginStatus,
+      logout,
     } = this.props;
     const getSearchArea = (show) => {
       const newList = list.toJS(); // 将 immutable类型的 lsit数组 转化为 普通类型的list 数组
@@ -72,11 +79,22 @@ class Header extends Component {
 
     return (
       <HeaderWrapper>
-        <Logo/>
+        <Link to="/">
+          <Logo/>
+        </Link>
         <Nav>
           <NavItem className="left active">首页</NavItem>
           <NavItem className="left">下载App</NavItem>
-          <NavItem className="right">登录</NavItem>
+          {
+            !loginStatus ? (
+              <Link to="/login">
+                <NavItem className="right">登录</NavItem>
+              </Link>
+            ): (
+              <NavItem className="right" onClick={logout}>退出</NavItem>
+            )
+          }
+          
           <NavItem className="right">
             <i className="iconfont">&#xe636;</i>
           </NavItem>
@@ -101,10 +119,12 @@ class Header extends Component {
           </SearchWrapper>
         </Nav>
         <Additon>
-          <Button className="writting">
-            <i className="iconfont">&#xe642;</i>
-            写文章
-          </Button>
+          <Link to="/write">
+            <Button className="writting">
+              <i className="iconfont">&#xe642;</i>
+              写文章
+            </Button>
+          </Link>
           <Button className="reg">注册</Button>
         </Additon>
       </HeaderWrapper>
@@ -122,6 +142,7 @@ const mapStateToProps = ( state ) => {
     mouseIn: state.getIn(['header','mouseIn']),
     page: state.getIn(['header','page']),
     totalPage: state.getIn(['header','totalPage']),
+    loginStatus: state.getIn(['login','loginStatus']), // 注意这里是从 login 这个reducer中拿数据
   }
 }
 
@@ -162,6 +183,9 @@ const mapDispatchToProps = (dispatch) => {
         return ;
       }
       dispatch(actionCreators.changePage(1));
+    },
+    logout() { // 这里调用的是 login 组件中的 actionCreators  所以要在login的 reducer 中去处理逻辑
+      dispatch(LoginActionCreators.logout());
     }
   }
 }

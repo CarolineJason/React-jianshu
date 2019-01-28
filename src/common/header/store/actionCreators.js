@@ -31,6 +31,7 @@ export const changePage = (page) => ({
   page,
 })
 
+
 export const getSearchData = () => {
   return (dispatch) => {
     axios.get('/api/headerList.json')

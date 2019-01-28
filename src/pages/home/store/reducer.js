@@ -1,47 +1,31 @@
 import { fromJS } from 'immutable'; // 从immutable 库中引入 formJS这个方法
-
+import * as constants from './constants';
 
 const initialState =fromJS({ // 将 reducer 中的初始数据 通过 fromJS 来封装
-  topicList: [
-    {
-      id: 1,
-      title: '社会热点',
-      imgUrl: '//upload.jianshu.io/users/upload_avatars/2836182/3ef15671cb48?imageMogr2/auto-orient/strip|imageView2/1/w/144/h/144/format/webp',
-    },
-    {
-      id: 2,
-      title: '手绘',
-      imgUrl: '//upload.jianshu.io/users/upload_avatars/2836182/3ef15671cb48?imageMogr2/auto-orient/strip|imageView2/1/w/144/h/144/format/webp',
-    }
-  ],
-  articleList: [
-    {
-      id: 1,
-      title: '【南怀瑾老师】今天很坦然地把咒语的秘密告诉大家！',
-      content: '葱花饼有好多种做法，好多朋友做的又硬还不起层，其实掌握下面2个秘诀，一定会成功，下面是详细制作步骤，好多朋友做的又硬还不起层，其实掌握下面2个秘诀，一定会成功喜欢的朋友赶快一起跟Bella学学吧~',
-    },
-    {
-      id: 2,
-      title: '【南怀瑾老师】今天很坦然地把咒语的秘密告诉大家！',
-      content: '葱花饼有好多种做法，好多朋友做的又硬还不起层，其实掌握下面2个秘诀，一定会成功，下面是详细制作步骤，好多朋友做的又硬还不起层，其实掌握下面2个秘诀，一定会成功喜欢的朋友赶快一起跟Bella学学吧~',
-    },
-    {
-      id: 3,
-      title: '【南怀瑾老师】今天很坦然地把咒语的秘密告诉大家！',
-      content: '葱花饼有好多种做法，好多朋友做的又硬还不起层，其实掌握下面2个秘诀，一定会成功，下面是详细制作步骤，好多朋友做的又硬还不起层，其实掌握下面2个秘诀，一定会成功喜欢的朋友赶快一起跟Bella学学吧~',
-    },
-    {
-      id: 4,
-      title: '【南怀瑾老师】今天很坦然地把咒语的秘密告诉大家！',
-      content: '葱花饼有好多种做法，好多朋友做的又硬还不起层，其实掌握下面2个秘诀，一定会成功，下面是详细制作步骤，好多朋友做的又硬还不起层，其实掌握下面2个秘诀，一定会成功喜欢的朋友赶快一起跟Bella学学吧~',
-    },
-  ]
+  topicList: [],
+  articleList: [],
+  recommendList: [],
+  writerList: [],
+  articlePage: 1,
 });
 
 export default (state=initialState, action) => {
+  console.log('action:', action);
   switch(action.type) {
-    
+    case constants.GET_HOME_DATA: 
+      return state.merge({
+        topicList: fromJS(action.topicList),
+				articleList: fromJS(action.articleList),
+				recommendList: fromJS(action.recommendList),
+				writerList:  fromJS(action.writerList),
+      })
+    case constants.ADD_MORE_LIST: 
+      // return state.set('articleList', state.get('articleList').concat(action.list));
+      return state.merge({
+        articleList: state.get('articleList').concat(action.list),
+        articlePage: action.nextPage,
+      })
     default: 
-    return state;
+      return state;
   }
 }

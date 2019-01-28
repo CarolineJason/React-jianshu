@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { Carousel } from 'antd';
-
+import { connect } from 'react-redux';
 import Topic from './components/Topic';
 import List from './components/List';
 import Recommend from './components/Recommend';
 import Writer from './components/Writer';
 import "antd/dist/antd.css";
+import {actionCreators }  from './store';
+import { BackTop } from 'antd';
 
 import {
 	HomeWrapper,
@@ -14,6 +16,15 @@ import {
 } from './style.js'
 
 class Home extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {}
+	}
+
+	componentDidMount() {
+		this.props.getHomeData();
+	}
+
 	render() {
 		return (
 			<HomeWrapper>
@@ -32,9 +43,18 @@ class Home extends Component {
 					<Recommend />
 					<Writer />
 				</HomeRight>
+				<BackTop />
 			</HomeWrapper>
 		)
 	}
 }
 
-export default Home;
+const mapDispatch = (dispathch) => ({
+	getHomeData () {
+		// 组件中的 业务逻辑都放在 actionCreators 中去处理。
+		const action = actionCreators.getHomeInfo();
+		dispathch(action); // 这里派发的 action 是去 请求数据
+	}
+})
+
+export default connect(null, mapDispatch)(Home);
